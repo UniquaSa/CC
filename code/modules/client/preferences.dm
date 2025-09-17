@@ -179,6 +179,10 @@ GLOBAL_LIST_EMPTY(chosen_names)
 	var/datum/loadout_item/loadout
 	var/datum/loadout_item/loadout2
 	var/datum/loadout_item/loadout3
+	//Cove edit start
+	var/datum/loadout_item/loadout4
+	var/datum/loadout_item/loadout5
+	//Cove edit end
 
 	var/flavortext
 	var/flavortext_display
@@ -402,11 +406,13 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<b>Virtue:</b> <a href='?_src_=prefs;preference=virtue;task=input'>[virtue]</a><BR>"
 			if(statpack.name == "Virtuous")
 				dat += "<b>Second Virtue:</b> <a href='?_src_=prefs;preference=virtuetwo;task=input'>[virtuetwo]</a><BR>"
+			dat += get_extra_virtue_htmlpick()
 			dat += "<b>Vice:</b> <a href='?_src_=prefs;preference=charflaw;task=input'>[charflaw]</a><BR>"
 			var/datum/faith/selected_faith = GLOB.faithlist[selected_patron?.associated_faith]
 			dat += "<b>Faith:</b> <a href='?_src_=prefs;preference=faith;task=input'>[selected_faith?.name || "FUCK!"]</a><BR>"
 			dat += "<b>Patron:</b> <a href='?_src_=prefs;preference=patron;task=input'>[selected_patron?.name || "FUCK!"]</a><BR>"
 			dat += "<b>Dominance:</b> <a href='?_src_=prefs;preference=domhand'>[domhand == 1 ? "Left-handed" : "Right-handed"]</a><BR>"
+			dat += "<b>Size Category:</b> <a href='?_src_=prefs;preference=sizecat;task=input'>[sizecat]</a><BR>"
 			dat += "<b>Food Preferences:</b> <a href='?_src_=prefs;preference=culinary;task=menu'>Change</a><BR>"
 
 			var/musicname = (combat_music.shortname ? combat_music.shortname : combat_music.name)
@@ -500,6 +506,12 @@ GLOBAL_LIST_EMPTY(chosen_names)
 			dat += "<br><b>Loadout Item II:</b> <a href='?_src_=prefs;preference=loadout_item2;task=input'>[loadout2 ? loadout2.name : "None"]</a>"
 
 			dat += "<br><b>Loadout Item III:</b> <a href='?_src_=prefs;preference=loadout_item3;task=input'>[loadout3 ? loadout3.name : "None"]</a>"
+
+			//Cove edit start
+			dat += "<br><b>Loadout Item IV:</b> <a href='?_src_=prefs;preference=loadout_item4;task=input'>[loadout4 ? loadout4.name : "None"]</a>"
+
+			dat += "<br><b>Loadout Item V:</b> <a href='?_src_=prefs;preference=loadout_item5;task=input'>[loadout5 ? loadout5.name : "None"]</a>"
+			//Cove edit end
 
 			dat += "<br><b>Be a Familiar:</b><a href='?_src_=prefs;preference=familiar_prefs;task=input'>Familiar Preferences</a>"
 
@@ -1937,6 +1949,51 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 							to_chat(user, "<font color='yellow'><b>[loadout3.name]</b></font>")
 							if(loadout3.desc)
 								to_chat(user, "[loadout3.desc]")
+				//Cove edit start
+				if("loadout_item4")
+					var/list/loadouts_available = list("None")
+					for (var/path as anything in GLOB.loadout_items)
+						var/datum/loadout_item/loadout4 = GLOB.loadout_items[path]
+						var/donoritem = loadout4.donoritem
+						if(donoritem && !loadout4.donator_ckey_check(user.ckey))
+							continue
+						if (!loadout4.name)
+							continue
+						loadouts_available[loadout4.name] = loadout4
+
+					var/loadout_input4 = input(user, "Choose your character's loadout item. RMB a tree, statue or clock to collect. I cannot stress this enough. YOU DON'T SPAWN WITH THESE. YOU HAVE TO MANUALLY PICK THEM UP!!", "LOADOUT THAT YOU GET FROM A TREE OR STATUE OR CLOCK") as null|anything in loadouts_available
+					if(loadout_input4)
+						if(loadout_input4 == "None")
+							loadout4 = null
+							to_chat(user, "Who needs stuff anyway?")
+						else
+							loadout4 = loadouts_available[loadout_input4]
+							to_chat(user, "<font color='yellow'><b>[loadout4.name]</b></font>")
+							if(loadout4.desc)
+								to_chat(user, "[loadout4.desc]")
+				if("loadout_item5")
+					var/list/loadouts_available = list("None")
+					for (var/path as anything in GLOB.loadout_items)
+						var/datum/loadout_item/loadout5 = GLOB.loadout_items[path]
+						var/donoritem = loadout5.donoritem
+						if(donoritem && !loadout5.donator_ckey_check(user.ckey))
+							continue
+						if (!loadout5.name)
+							continue
+						loadouts_available[loadout5.name] = loadout5
+
+					var/loadout_input5 = input(user, "Choose your character's loadout item. RMB a tree, statue or clock to collect. I cannot stress this enough. YOU DON'T SPAWN WITH THESE. YOU HAVE TO MANUALLY PICK THEM UP!!", "LOADOUT THAT YOU GET FROM A TREE OR STATUE OR CLOCK") as null|anything in loadouts_available
+					if(loadout_input5)
+						if(loadout_input5 == "None")
+							loadout5 = null
+							to_chat(user, "Who needs stuff anyway?")
+						else
+							loadout5 = loadouts_available[loadout_input5]
+							to_chat(user, "<font color='yellow'><b>[loadout5.name]</b></font>")
+							if(loadout5.desc)
+								to_chat(user, "[loadout5.desc]")
+				//Cove edit end
+
 				if("species")
 					var/list/species = list()
 					for(var/A in GLOB.roundstart_races)
@@ -1968,7 +2025,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						var/datum/virtue/V = GLOB.virtues[path]
 						if (!V.name)
 							continue
-						if (V.name == virtue.name || V.name == virtuetwo.name)
+						if (V.name == virtue.name || V.name == virtuetwo.name || V.name == extravirtue.name)
 							continue
 						if (istype(V, /datum/virtue/heretic) && !istype(selected_patron, /datum/patron/inhumen))
 							continue
@@ -1989,7 +2046,7 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 						var/datum/virtue/V = GLOB.virtues[path]
 						if (!V.name)
 							continue
-						if (V.name == virtue.name || V.name == virtuetwo.name)
+						if (V.name == virtue.name || V.name == virtuetwo.name || V.name == extravirtue.name)
 							continue
 						if (istype(V, /datum/virtue/heretic) && !istype(selected_patron, /datum/patron/inhumen))
 							continue
@@ -2006,7 +2063,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					/*	if (statpack.type != /datum/statpack/wildcard/virtuous)
 							statpack = new /datum/statpack/wildcard/virtuous
 							to_chat(user, span_purple("Your statpack has been set to virtuous (no stats) due to selecting a virtue.")) */
-
+				if("extravirtue")
+					get_extra_virtue_input(user)
 				if("charflaw")
 					var/list/coom = GLOB.character_flaws.Copy()
 					var/result = input(user, "Select a flaw", "FLAWS") as null|anything in coom
@@ -2022,7 +2080,8 @@ Slots: [job.spawn_positions] [job.round_contrib_points ? "RCP: +[job.round_contr
 					if(new_body_size)
 						new_body_size = clamp(new_body_size * 0.01, BODY_SIZE_MIN, BODY_SIZE_MAX)
 						features["body_size"] = new_body_size
-
+				if("sizecat")
+					select_sizecat(user)
 				if("taur_color")
 					var/new_taur_color = color_pick_sanitized(user, "Choose your character's taur color:", "Character Preference", "#"+taur_color)
 					if(new_taur_color)

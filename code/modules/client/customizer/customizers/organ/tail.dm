@@ -162,6 +162,11 @@
 		/datum/sprite_accessory/tail/forked_long,
 		/datum/sprite_accessory/tail/haven,
 		/datum/sprite_accessory/tail/swallow,
+		//Caustic edit
+		/datum/sprite_accessory/tail/tiefling,
+		/datum/sprite_accessory/tail/tiefling/heart,
+		//Caustic edit end
+
 		)
 
 /datum/customizer/organ/tail/anthro

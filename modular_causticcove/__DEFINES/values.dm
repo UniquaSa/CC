@@ -1,0 +1,1 @@
+#define ARMOR_NATURAL list("blunt" = 100, "slash" = 70, "stab" = 60, "piercing" = 40, "fire" = 0, "acid" = 0)

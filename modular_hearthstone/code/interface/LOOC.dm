@@ -41,10 +41,13 @@
 	if(is_banned_from(ckey, "LOOC"))
 		to_chat(src, span_danger("I cannot use LOOC (perma muted)."))
 		return
-	
+	//Caustic edit
+	/*
 	if(isobserver(mob))
 		to_chat(src, span_danger("I cannot use LOOC while dead."))
 		return
+	*/
+	//Caustic edit end
 
 	if(!mob)
 		return

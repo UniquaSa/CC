@@ -222,12 +222,14 @@ Balloon Alert / Floating Text defines
 	/datum/species/akula,\
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
+	/datum/species/harpy,\
 
 
 #define RACES_SHUNNED \
 	/datum/species/halforc,\
 	/datum/species/anthromorphsmall,\
 	/datum/species/kobold,\
+	/datum/species/harpy,\
 
 #define RACES_DESPISED \
 	/datum/species/goblinp,\
@@ -284,6 +286,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/anthromorph,\
 	/datum/species/anthromorphsmall,\
 	/datum/species/demihuman,\
+	/datum/species/harpy,\
 	/datum/species/halforc,\
 	/datum/species/orc,\
 	/datum/species/kobold,\
@@ -308,6 +311,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
 	/datum/species/halforc,\
+	/datum/species/harpy,\
 	/datum/species/construct/metal,\
 )
 // Non-elf non-dwarf non-kobold non-goblin mostly
@@ -324,6 +328,7 @@ Balloon Alert / Floating Text defines
 	/datum/species/dracon,\
 	/datum/species/anthromorph,\
 	/datum/species/demihuman,\
+	/datum/species/harpy,\
 	/datum/species/construct/metal,\
 )
 #define ALL_CLERIC_PATRONS list(/datum/patron/divine/astrata, /datum/patron/divine/noc, /datum/patron/divine/dendor, /datum/patron/divine/necra, /datum/patron/divine/pestra, /datum/patron/divine/ravox, /datum/patron/divine/malum, /datum/patron/divine/eora, /datum/patron/divine/undivided) // Currently unused.

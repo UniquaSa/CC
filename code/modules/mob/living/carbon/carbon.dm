@@ -1019,7 +1019,10 @@
 			src.apply_status_effect(/datum/status_effect/buff/undermaidenbargainheal)
 			return
 		if(health <= HEALTH_THRESHOLD_DEAD && !HAS_TRAIT(src, TRAIT_NODEATH))
-			INVOKE_ASYNC(src, PROC_REF(emote), "deathgurgle")
+			//Cove edit start
+			if (!istype(loc, /obj/belly))
+			//Cove edit end
+				INVOKE_ASYNC(src, PROC_REF(emote), "deathgurgle")
 			death()
 			cure_blind(UNCONSCIOUS_BLIND)
 			return

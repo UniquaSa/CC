@@ -13,7 +13,7 @@
 
 	outfit = /datum/outfit/job/roguetown/goblincook
 	display_order = JDO_GOBLINCOOK
-	min_pq = 0
+	min_pq = null //0
 	max_pq = null
 
 /datum/outfit/job/roguetown/goblincook/pre_equip(mob/living/carbon/human/H)

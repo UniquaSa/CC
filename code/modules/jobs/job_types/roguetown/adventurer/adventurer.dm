@@ -19,7 +19,7 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 
 	display_order = JDO_ADVENTURER
 	show_in_credits = FALSE
-	min_pq = 0
+	min_pq = null //0
 	max_pq = null
 
 	advclass_cat_rolls = list(CTAG_ADVENTURER = 20)
@@ -70,7 +70,11 @@ GLOBAL_VAR_INIT(adventurer_hugbox_duration_still, 3 MINUTES)
 		/datum/advclass/foreigner/yoruku,
 		/datum/advclass/foreigner/repentant,
 		/datum/advclass/foreigner/refugee,
-		/datum/advclass/foreigner/slaver
+		/datum/advclass/foreigner/slaver,
+		///Caustic edit
+		/datum/advclass/mage/spellthief,
+		/datum/advclass/lurker,
+		///Caustic edit end
 	)
 
 /datum/job/roguetown/adventurer/after_spawn(mob/living/L, mob/M, latejoin = TRUE)
