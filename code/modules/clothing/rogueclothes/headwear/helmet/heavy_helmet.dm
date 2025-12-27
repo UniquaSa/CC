@@ -640,7 +640,9 @@
 	body_parts_covered = FULL_HEAD|NECK
 	flags_inv = HIDEEARS|HIDEFACE|HIDEHAIR
 	block2add = FOV_RIGHT|FOV_LEFT
-	armor_class = ARMOR_CLASS_HEAVY //CC edit. We never see this one but if I see a dodge user deranged enough to run it I'm pulling out the soap.
+	//CC note. This won't have an AC. For now.
+	//A dodge build running this will be at an advantage because you don't need to SEE your opponent to dodge.
+	//If I *do* see one of you running a dodge build with this, I'm going to whip out the soap.
 	max_integrity = ARMOR_INT_HELMET_HEAVY_STEEL + ARMOR_INT_HELMET_HEAVY_ADJUSTABLE_PENALTY // Worst vision. Yes.
 	smeltresult = /obj/item/ingot/steel
 	smelt_bar_num = 2
