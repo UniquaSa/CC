@@ -521,30 +521,29 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 	if (step_to(gib, get_step(gib, dir), 0))
 		if (dir == NORTH)
-			gib.pixel_y = 14
+			gib.pixel_y = -11
 		if (dir == SOUTH)
-			gib.pixel_y = -14
+			gib.pixel_y = 11
 		if (dir == EAST)
-			gib.pixel_x = 14
+			gib.pixel_x = -11
 		if (dir == WEST)
-			gib.pixel_x = -14
+			gib.pixel_x = 11
 		gib.pixel_x += rand(-2,2)
 		gib.pixel_y += rand(-2,2)
 	else
 		if (dir == NORTH)
-			gib.pixel_y = -12
+			gib.pixel_y = 8
 		if (dir == SOUTH)
-			gib.pixel_y = 12
+			gib.pixel_y = -8
 		if (dir == EAST)
-			gib.pixel_x = -12
+			gib.pixel_x = 8
 		if (dir == WEST)
-			gib.pixel_x = 12
+			gib.pixel_x = -8
 		gib.pixel_x += rand(-2,2)
 		gib.pixel_y += rand(-2,2)
 
 // This proc is entirely new for the changes to butchery
 /mob/living/simple_animal/proc/clean_gib(list/dna_to_add)
-	var/prev_lying = lying
 	if(stat != DEAD)
 		death(TRUE)
 	if(client)
