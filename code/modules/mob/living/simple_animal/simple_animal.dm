@@ -137,7 +137,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 	///If the creature has, and can use, hands.
 	var/dextrous = FALSE
-	var/dextrous_hud_type = /datum/hud/dextrous
+	var/dextrous_hud_type = /datum/hud/human
 
 	///The Status of our AI, can be set to AI_ON (On, usual processing), AI_IDLE (Will not process, but will return to AI_ON if an enemy comes near), NPC_AI_OFF (Off, Not processing ever), AI_Z_OFF (Temporarily off due to nonpresence of players).
 	var/AIStatus = AI_ON
@@ -425,6 +425,8 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 			saddle_storage.show_to(user)
 	..()
 
+// Caustic Edit - Keeping most of it the same, just changing how it handles failed butchers and spawn a gib on a neighboring tile instead of just exploding at the end.
+
 /mob/living/simple_animal/proc/butcher(mob/living/user, on_meathook = FALSE)
 	if(ssaddle)
 		ssaddle.forceMove(get_turf(src))
@@ -461,6 +463,9 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 	var/perfect_count = 0
 	var/normal_count = 0
 
+	var/list/dna_to_add // Copied over from the gibspawner.dm and trimmed down, so that gibs have a bloodtype? If it matters?
+	dna_to_add = list("Non-human DNA" = random_blood_type())
+
 	for(var/path in butcher_results)
 		var/amount = butcher_results[path]
 		if(!do_after(user, time_per_cut, target = src))
@@ -472,6 +477,7 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 
 		// Check for botch first
 		if(prob(botch_chance))
+			botched_gib(dna_to_add)
 			botch_count++
 			if(length(botched_butcher_results) && (path in botched_butcher_results))
 				amount = botched_butcher_results[path]
@@ -503,7 +509,55 @@ GLOBAL_VAR_INIT(farm_animals, FALSE)
 		playsound(src, 'sound/foley/gross.ogg', 100, FALSE)
 	if(isemptylist(butcher_results))
 		to_chat(user, "<span class='notice'>I finish butchering: [butcher_summary(botch_count, normal_count, perfect_count, botch_chance, perfect_chance)].</span>")
-		gib()
+		clean_gib(dna_to_add)
+
+// This will choose a random adjacent tile to spawn a gib on, and then edit it's offset accordingly so it's closer to the body
+/mob/living/simple_animal/proc/botched_gib(list/dna_to_add)
+	var/dir = pick(list(WEST, EAST, SOUTH, NORTH))
+
+	var/gibType = /obj/effect/decal/cleanable/blood/gibs
+	var/obj/effect/decal/cleanable/blood/gibs/gib = new gibType(src.loc)
+	gib.add_blood_DNA(dna_to_add)
+
+	if (step_to(gib, get_step(gib, dir), 0))
+		if (dir == NORTH)
+			gib.pixel_y = -11
+		if (dir == SOUTH)
+			gib.pixel_y = 11
+		if (dir == EAST)
+			gib.pixel_x = -11
+		if (dir == WEST)
+			gib.pixel_x = 11
+		gib.pixel_x += rand(-2,2)
+		gib.pixel_y += rand(-2,2)
+	else
+		if (dir == NORTH)
+			gib.pixel_y = 8
+		if (dir == SOUTH)
+			gib.pixel_y = -8
+		if (dir == EAST)
+			gib.pixel_x = 8
+		if (dir == WEST)
+			gib.pixel_x = -8
+		gib.pixel_x += rand(-2,2)
+		gib.pixel_y += rand(-2,2)
+
+// This proc is entirely new for the changes to butchery
+/mob/living/simple_animal/proc/clean_gib(list/dna_to_add)
+	if(stat != DEAD)
+		death(TRUE)
+	if(client)
+		SSdroning.kill_droning(client)
+	playsound(src.loc, pick('sound/combat/gib (1).ogg','sound/combat/gib (2).ogg'), 40, FALSE, 2)
+
+	spill_embedded_objects()
+
+	var/gibType = /obj/effect/decal/cleanable/blood/gibs/core
+	var/obj/effect/decal/cleanable/blood/gibs/gib = new gibType(src.loc)
+	gib.add_blood_DNA(dna_to_add)
+	qdel(src)
+
+// Caustic Edit End
 
 /mob/living/proc/butcher_summary(botch_count, normal_count, perfect_count, botch_chance, perfect_chance)
     var/list/parts = list()
