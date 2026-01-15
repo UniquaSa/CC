@@ -972,6 +972,11 @@
 	/*if(!owner.ckey && escape_stun)
 		owner.Weaken(escape_stun)*/
 
+	if(iscarbon(owner)) //No other idea than liket his. holy moly. carbon npcs are insanely difficult to do when you're thoughtless
+		var/mob/living/carbon/human/npc = owner
+		if(npc.is_voracious_npc)
+			npc.decrease_belly_size()
+
 	return 1
 
 // Actually perform the mechanics of devouring the tasty prey.
@@ -991,6 +996,11 @@
 
 	for(var/mob/living/M in contents)
 		M.updateVRPanel()
+
+	if(iscarbon(owner))
+		var/mob/living/carbon/human/npc = owner
+		if(npc.is_voracious_npc)
+			npc.increase_belly_size()
 
 	/*if(prey.ckey)
 		GLOB.prey_eaten_roundstat++

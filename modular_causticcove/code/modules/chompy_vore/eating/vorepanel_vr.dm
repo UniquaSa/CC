@@ -461,6 +461,7 @@
 			host.allowmobvore = !host.allowmobvore
 			if(host.client.prefs_vr)
 				host.client.prefs_vr.allowmobvore = host.allowmobvore
+			to_chat(host, span_boldwarning("Mobs will currently only eat you if you can also be digested. However, if you get digested, there won't be a body for resurrection. Beware that if you die, and nobody knows to reform you, you risk this character being removed from the round! This feature is still very early in its development and improvements are still in the works."))
 			unsaved_changes = TRUE
 			return TRUE
 		if("toggle_steppref")

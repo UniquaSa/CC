@@ -254,7 +254,7 @@
 	if(isnull(digest_leave_remains))
 		digest_leave_remains = FALSE
 	if(isnull(allowmobvore))
-		allowmobvore = TRUE
+		allowmobvore = FALSE
 	if(isnull(allowtemp))
 		allowtemp = TRUE
 	if(isnull(permit_healbelly))

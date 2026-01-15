@@ -665,6 +665,25 @@
 			if(Adjacent(target) && isturf(target.loc))	// if right next to perp
 				frustration = 0
 				face_atom(target)
+				//god see my code and disapprove, I would love to try and fix this, but it's genuinely bothersome
+				if(prob(15))
+					if(is_voracious_npc && target.allowmobvore && target.digestable && pulling == target && grab_state == GRAB_AGGRESSIVE)
+						var/npcbelly = src.vore_selected
+						NPC_THINK("Hungry! Trying to eat [target]!")
+						attempt_to_devour_prey(src, target, src, npcbelly, 7 SECONDS)
+						return
+				if(is_voracious_npc && target.allowmobvore && target.digestable && target.surrendering) //The idea was to try and make them grab it, but it just doesn't work, how does the grab system even WORK??
+					var/npcbelly = src.vore_selected
+					NPC_THINK("[target] surrendered! Trying to grab and eat [target]!")
+					attempt_to_devour_prey(src, target, src, npcbelly, 7 SECONDS)
+					return
+				if(is_voracious_npc && target.allowmobvore && target.digestable && target.lying) //If you're lying down, you're getting stunned and eaten, gg bozo.
+					if(prob(45))
+						target.Stun(7 SECONDS)
+						var/npcbelly = src.vore_selected
+						NPC_THINK("Hungry! Trying to eat [target]!")
+						attempt_to_devour_prey(src, target, src, npcbelly, 5 SECONDS)
+						return
 				. = monkey_attack(target)
 				steps_moved_this_turn++ // an attack costs, currently, 1 movement step
 				NPC_THINK("Used [steps_moved_this_turn] moves out of [maxStepsTick]!")
@@ -723,6 +742,13 @@
 // attack using a held weapon otherwise bite the enemy, then if we are angry there is a chance we might calm down a little
 /// Try to attack using an offhand grab.
 /mob/living/carbon/human/proc/npc_try_use_grab(mob/living/victim, obj/item/grabbing/the_grab)
+	if(is_voracious_npc && victim.allowmobvore && victim.digestable)
+		rog_intent_change(2)
+		zone_selected = BODY_ZONE_CHEST
+		NPC_THINK("Pinning [victim] for VORE...")
+		the_grab.melee_attack_chain(src, victim)
+		walk_to(src, get_turf(Adjacent(victim))) //This should get on them.
+		return
 	// set the intent 'intelligently'
 	if(isitem(the_grab.sublimb_grabbed) && prob(30))
 		rog_intent_change(1) // 30% chance to remove the embedded weapon, 70% to twist it
@@ -814,6 +840,9 @@
 	if(HAS_TRAIT(victim, TRAIT_CHUNKYFINGERS))
 		make_grab_chance = 30 // we can't use normal weapons, so try to grapple harder because we don't care about having a free hand
 		use_grab_chance = 50
+	if(prob(25) && is_voracious_npc && target.allowmobvore)
+		make_grab_chance = 70
+		use_grab_chance = 80
 	// we always try to move our grab into our offhand where possible, so no need to worry about main-hand weapons
 	var/obj/item/grabbing/the_grab = OffWeapon
 	if(istype(the_grab)) // if we already have a grab in our offhand, we might want to use it
@@ -901,6 +930,8 @@
 	var/deadite_mouthgrab_chance = clamp(50 + (STAINT - 10)*5, 25, 100) // int of 5 -> 25%, int of 15 -> 75%, int of 20 -> 100%
 	if(prob(deadite_mouthgrab_chance) && can_mouthgrab && victim_is_deadite && !istype(victim.get_item_by_slot(SLOT_MOUTH), /obj/item/grabbing/bite)) // 60% chance to go for the mouth to stop biting
 		zone_selected = BODY_ZONE_PRECISE_MOUTH
+	else if(is_voracious_npc && target.allowmobvore)
+		zone_selected = BODY_ZONE_CHEST //Tackle
 	else
 		npc_choose_attack_zone(victim)
 
